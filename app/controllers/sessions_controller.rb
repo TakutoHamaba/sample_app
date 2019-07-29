@@ -11,7 +11,16 @@ class SessionsController < ApplicationController
       # ユーザーログイン後にユーザー情報のページにリダイレクトする
       #helperで定義したloginを使用
       log_in user
+      
+      #Remember meで保存するか否か
+      if params[:session][:remember_me] == '1'
+          remember(user)
+      else
+          forget(user)
+      end
+  
       redirect_to user
+      
     else
       # エラーメッセージを作成する
       flash.now[:danger] = 'Invalid email/password combination' 
@@ -20,7 +29,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    log_out
+    log_out if logged_in?
     redirect_to root_url
   end
 end
